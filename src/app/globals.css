@@ -1,26 +1,109 @@
 @import "tailwindcss";
 
+/* ---------- Design tokens (swap real logo colours here) ---------- */
 :root {
+  --neovia-primary: #3b3fd8;
+  --neovia-accent: #14c8b4;
+  --neovia-ink: #0b0d17;
+  --client-primary: #c2643f;
+  --client-sand: #efe6da;
+
+  --src-instagram: #d946ef;
+  --src-google: #3b82f6;
+  --src-calls: #f59e0b;
+  --src-website: #14b8a6;
+  --src-whatsapp: #22c55e;
+
+  --background: #fafafb;
+  --foreground: #0b0d17;
+  --surface: #ffffff;
+  --surface-2: #f3f4f8;
+  --border: #e5e7ee;
+  --muted: #6b7280;
+}
+.dark {
+  --background: #0b0d17;
+  --foreground: #eef0f8;
+  --surface: #12152a;
+  --surface-2: #1a1e38;
+  --border: #272c4a;
+  --muted: #9aa1bd;
+}
+/* Landing, run and tour surfaces force dark regardless of theme */
+.force-dark {
+  --background: #0b0d17;
+  --foreground: #eef0f8;
+  --surface: #12152a;
+  --surface-2: #1a1e38;
+  --border: #272c4a;
+  --muted: #9aa1bd;
+}
+/* The report is always light */
+.force-light {
   --background: #ffffff;
-  --foreground: #171717;
+  --foreground: #0b0d17;
+  --surface: #ffffff;
+  --surface-2: #f3f4f8;
+  --border: #e5e7ee;
+  --muted: #6b7280;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-border: var(--border);
+  --color-muted: var(--muted);
+  --color-primary: var(--neovia-primary);
+  --color-accent: var(--neovia-accent);
+  --color-ink: var(--neovia-ink);
+  --color-terracotta: var(--client-primary);
+  --color-sand: var(--client-sand);
+  --color-src-instagram: var(--src-instagram);
+  --color-src-google: var(--src-google);
+  --color-src-calls: var(--src-calls);
+  --color-src-website: var(--src-website);
+  --color-src-whatsapp: var(--src-whatsapp);
+  --font-sans: var(--font-jakarta), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
+html { color-scheme: light; }
+html.dark { color-scheme: dark; }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
+  font-variant-numeric: tabular-nums;
 }
+
+.force-dark, .force-light { background: var(--background); color: var(--foreground); }
+
+/* ---------- Print: report page 1 on a single A4 ---------- */
+@page { size: A4; margin: 12mm; }
+@media print {
+  .no-print { display: none !important; }
+  html, body { background: #fff !important; color: #000 !important; }
+  .print-page-break { break-after: page; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
+
+/* ---------- Report: always light, print-friendly ---------- */
+.report-sheet, .report-sheet * { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+@media print {
+  html, body { background: #fff !important; }
+  .report-sheet { box-shadow: none !important; max-width: none !important; width: auto !important; padding: 0 !important; margin: 0 !important; font-size: 12px; }
+  .report-sheet [data-metric] { text-decoration: none !important; }
+  .report-page-1 { break-after: page; break-inside: avoid; }
+  .report-appendix tr { break-inside: avoid; }
+  .report-appendix thead { display: table-header-group; }
+  .report-appendix h3 { break-after: avoid; }
+}
+
+/* hide app chrome inside the in-phone report viewer */
+.embedded [data-chrome] { display: none !important; }
